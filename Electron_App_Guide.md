@@ -1,6 +1,6 @@
 # Electron App Guide (Build to .exe)
 
-This guide shows you how to create a simple Electron app that launches your web app (`https://esemak.ikpkp.my/`) and build it into a Windows `.exe` file.
+This guide shows you how to create a simple Electron app that launches your web app (`https://google.com/`) and build it into a Windows `.exe` file.
 
 ---
 
@@ -25,9 +25,9 @@ Open `package.json` and update it like this:
 
 ```json
 {
-  "name": "ikpkp",
+  "name": "google",
   "version": "1.0.0",
-  "description": "Electron desktop launcher for https://esemak.ikpkp.my/",
+  "description": "Electron desktop launcher for https://google.com/",
   "main": "main.js",
   "author": "Your Name",
   "license": "MIT",
@@ -40,8 +40,8 @@ Open `package.json` and update it like this:
     "electron-builder": "^25.0.0"
   },
   "build": {
-    "appId": "my.ikpkp.esemak",
-    "productName": "ikpkp",
+    "appId": "com.google",
+    "productName": "google",
     "win": {
       "target": "nsis",
       "icon": "icon.ico"
@@ -72,7 +72,7 @@ function createWindow() {
   });
 
   // Load your web app
-  win.loadURL("https://esemak.ikpkp.my/");
+  win.loadURL("https://google.com/");
 }
 
 app.whenReady().then(createWindow);
@@ -102,7 +102,7 @@ Electron Builder will generate your `.exe` installer in:
 dist/
 ```
 
-Example: `dist/ikpkp Setup 1.0.0.exe`
+Example: `dist/google Setup 1.0.0.exe`
 
 ---
 

@@ -1,7 +1,7 @@
 
 # 📱 Capacitor Android WebView App (APK Build & Signing Guide)
 
-This guide shows you how to package your web app (`https://esemak.ikpkp.my/`) into an Android APK using Capacitor.  
+This guide shows you how to package your web app (`https://google.com/`) into an Android APK using Capacitor.  
 
 ---
 
@@ -20,8 +20,8 @@ npx cap init
 ```
 
 When asked:  
-- **App Name** → `ikpkp`  
-- **App ID** → `my.ikpkp.esemak`  
+- **App Name** → `google`  
+- **App ID** → `com.google`  
 
 Create an empty folder so Capacitor won’t complain:
 
@@ -37,11 +37,11 @@ Create `capacitor.config.json` in your project root:
 
 ```json
 {
-  "appId": "my.ikpkp.esemak",
-  "appName": "ikpkp",
+  "appId": "com.google",
+  "appName": "google",
   "webDir": "dist",
   "server": {
-    "url": "https://esemak.ikpkp.my/",
+    "url": "https://google.com/",
     "cleartext": true
   }
 }
@@ -95,11 +95,11 @@ Inside the `android { ... }` block, add:
 
 ```gradle
 android {
-    namespace "my.ikpkp.esemak"
+    namespace "com.google"
     compileSdkVersion 34
 
     defaultConfig {
-        applicationId "my.ikpkp.esemak"
+        applicationId "com.google"
         minSdkVersion 23
         targetSdkVersion 34
         versionCode 1

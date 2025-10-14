@@ -11,19 +11,6 @@ This guide shows you how to package your web app (`https://google.com/`) into an
 npm install @capacitor/core @capacitor/cli @capacitor/android
 ```
 
-## Optional - Install Splash Screen
-
-```bash
-npm install @capacitor/splash-screen
-npx cap sync (if installed)
-```
-
-Add Splash image inside web assets
-
-```bash
-assets/splash.png
-```
-
 ---
 
 ## ⚡ Step 2. Initialize Capacitor
@@ -60,38 +47,7 @@ Create `capacitor.config.json` in your project root:
 }
 ```
 
-for Splash Screen
-```json
-{
-  "appId": "com.google",
-  "appName": "google",
-  "webDir": "dist",
-  "server": {
-    "url": "https://google.com/",
-    "cleartext": true
-  },
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 2000,
-      "launchAutoHide": true,
-      "backgroundColor": "#ffffff",
-      "androidScaleType": "CENTER_INSIDE",
-      "showSpinner": false,
-      "splashFullScreen": true,
-      "splashImmersive": true
-    }
-  }
-}
-
-```
-
 ---
-
-## Optional Generate Splash
-
-```bash
-npx @capacitor/assets generate --icon assets/icon.png --splash assets/splash.png
-```
 
 ## ⚡ Step 4. Add Android Platform
 

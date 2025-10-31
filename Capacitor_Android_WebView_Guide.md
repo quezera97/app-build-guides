@@ -63,6 +63,18 @@ npx cap add android
 npx cap sync android
 ```
 
+## Additional Step
+```
+npm install @capacitor/assets
+=> create new folder [assets] at root dir
+
+npx @capacitor/assets generate --ios [ios only]
+
+npx @capacitor/assets generate --android [android only]
+
+npx capacitor-assets generate [for all including pwa]
+```
+
 ---
 
 ## ⚡ Step 6. Open in Android Studio

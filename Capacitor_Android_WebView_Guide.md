@@ -21,7 +21,8 @@ npx cap init
 
 When asked:  
 - **App Name** → `google`  
-- **App ID** → `com.google`  
+- **App ID** → `com.google`
+- **Web Asset Dir** → `dist` 
 
 Create an empty folder so Capacitor won’t complain:
 

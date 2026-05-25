@@ -44,6 +44,9 @@ Create `capacitor.config.json` in your project root:
   "server": {
     "url": "https://google.com/",
     "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
   }
 }
 ```

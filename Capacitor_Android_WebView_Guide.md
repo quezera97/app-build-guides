@@ -1,131 +1,157 @@
+# 📱 Capacitor Android WebView App (Full APK Build + Splash + Signing Guide)
 
-# 📱 Capacitor Android WebView App (APK Build & Signing Guide)
+This guide shows how to wrap a live website into an Android APK using Capacitor.
 
-This guide shows you how to package your web app (`https://google.com/`) into an Android APK using Capacitor.  
+Example website:
+https://your-site.com
 
 ---
 
-## ⚡ Step 1. Install Capacitor Packages
+## ⚡ 1. Install Capacitor
 
-```bash
 npm install @capacitor/core @capacitor/cli @capacitor/android
-```
+
+(Optional for icons + splash automation)
+
+npm install @capacitor/assets
 
 ---
 
-## ⚡ Step 2. Initialize Capacitor
+## ⚡ 2. Initialize Capacitor
 
-```bash
 npx cap init
-```
 
-When asked:  
-- **App Name** → `google`  
-- **App ID** → `com.google`
-- **Web Asset Dir** → `dist` 
+Fill in:
+- App Name → MyApp  
+- App ID → com.myapp.name  
+- Web Dir → dist  
 
-Create an empty folder so Capacitor won’t complain:
+Create folder if using remote website:
 
-```bash
 mkdir dist
-```
 
 ---
 
-## ⚡ Step 3. Configure Remote WebView
+## ⚡ 3. Capacitor Config (Remote WebView)
 
-Create `capacitor.config.json` in your project root:
+Create capacitor.config.json:
 
-```json
 {
-  "appId": "com.google",
-  "appName": "google",
+  "appId": "com.myapp.name",
+  "appName": "MyApp",
   "webDir": "dist",
   "server": {
-    "url": "https://google.com/",
+    "url": "https://your-site.com",
     "cleartext": true
   },
   "android": {
     "allowMixedContent": true
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "launchAutoHide": true,
+      "backgroundColor": "#ffffff",
+      "showSpinner": false
+    }
   }
 }
-```
 
 ---
 
-## ⚡ Step 4. Add Android Platform
+## ⚡ 4. Add Android Platform
 
-```bash
 npx cap add android
-```
 
 ---
 
-## ⚡ Step 5. Sync Project
+## ⚡ 5. Sync Project
 
-```bash
 npx cap sync android
-```
-
-## Additional Step
-```
-npm install @capacitor/assets
-=> create new folder [assets] at root dir
-
-npx @capacitor/assets generate --ios [ios only]
-
-npx @capacitor/assets generate --android [android only]
-
-npx capacitor-assets generate [for all including pwa]
-```
 
 ---
 
-## ⚡ Step 6. Open in Android Studio
+## 🎨 6. App Icons & Splash (Optional but recommended)
 
-```bash
+Create assets folder:
+
+mkdir assets
+
+Add:
+- icon.png (1024x1024)
+- splash.png (2000x2000)
+
+Generate assets:
+
+npx @capacitor/assets generate --android
+
+---
+
+## ⚡ 7. Open Android Studio
+
 npx cap open android
-```
 
 ---
 
-# 🔐 Sign & Generate Release APK
+## 📱 8. Splash Screen Setup (Manual – BEST CONTROL)
 
-## Step 1. Create a Keystore (only once)
+Add splash image:
 
-```bash
+android/app/src/main/res/drawable/splash.png
+
+Edit launch_background.xml:
+
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@android:color/white" />
+
+    <item>
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/splash" />
+    </item>
+
+</layer-list>
+
+---
+
+## ⚡ Android 12+ Splash Screen
+
+Edit themes.xml:
+
+<style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
+
+    <item name="windowSplashScreenBackground">#FFFFFF</item>
+
+    <item name="windowSplashScreenAnimatedIcon">
+        @drawable/splash
+    </item>
+
+    <item name="postSplashScreenTheme">
+        @style/AppTheme
+    </item>
+
+</style>
+
+---
+
+## 🔐 9. Create Keystore (ONE TIME ONLY)
+
 keytool -genkey -v -keystore release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias release
-```
 
-- `release-key.jks` → your keystore file (keep it safe).  
-- `alias` → nickname for the key (here we used `release`).  
-
-You will be asked for a password, name, organization, etc.  
+Keep this file SAFE forever.
 
 ---
 
-## Step 2. Configure Gradle for Signing
+## ⚙️ 10. Configure Signing (android/app/build.gradle)
 
-Edit **`android/app/build.gradle`**.  
-Inside the `android { ... }` block, add:
-
-```gradle
 android {
-    namespace "com.google"
-    compileSdkVersion 34
-
-    defaultConfig {
-        applicationId "com.google"
-        minSdkVersion 23
-        targetSdkVersion 34
-        versionCode 1
-        versionName "1.0"
-    }
 
     signingConfigs {
         release {
             storeFile file("release-key.jks")
-            storePassword "your-keystore-password"
+            storePassword "your-store-password"
             keyAlias "release"
             keyPassword "your-key-password"
         }
@@ -133,68 +159,34 @@ android {
 
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
-            signingConfig signingConfigs.release
         }
     }
 }
-```
-
-Replace the passwords with the ones you entered when creating the keystore.
 
 ---
 
-## Step 3. Build Signed APK
+## 📦 11. Build Release APK
 
-### 🔹 Option A: From Android Studio  
-- **Build > Generate Signed Bundle / APK**  
-- Choose **APK**  
-- Select **release** build  
-- Enter your keystore details  
-- Click **Finish**  
+Option A: Android Studio
+- Build → Generate Signed Bundle / APK  
+- Choose APK  
+- Select release  
 
-### 🔹 Option B: From Command Line  
+Option B: Terminal
 
-```bash
-# On Linux/Mac
 ./gradlew assembleRelease
 
-# On Windows (CMD/PowerShell)
-gradlew assembleRelease
-```
-
----
-
-## Step 4. Find Your Signed APK
-
-Your release APK will be generated here:
-
-```
+APK output:
 android/app/build/outputs/apk/release/app-release.apk
-```
 
 ---
 
-# 🎨 Change App Icon
-
-### Option 1: Replace Manually  
-Replace the PNG files in:  
-```
-android/app/src/main/res/mipmap-*/
-```
-
-### Option 2: Use Android Studio Asset Studio (Recommended)  
-
-1. Open your project in Android Studio:  
-   ```bash
-   npx cap open android
-   ```
-2. Right-click **`res`** → **New → Image Asset**  
-3. Choose your PNG file as the **launcher icon**  
-4. Android Studio will generate all required sizes  
-5. Run the app 🎉  
-
----
-
-✅ Now you have a signed APK with your own app icon and WebView pointing to your website.  
+## ✅ DONE
+You now have:
+- WebView Android app
+- Remote website loading
+- Custom icon + splash screen
+- Signed APK build
